@@ -54,7 +54,7 @@ public class PoiManagerBehavior : MonoBehaviour
                                 int minValue = Convert.ToInt32(attribute.Value[0]);
                                 int maxValue = Convert.ToInt32(attribute.Value[1]);
                                 
-                                if (invertedSelection)
+                                if (invertedSelection && index == attribute.Key)
                                 {
                                     if (!(value < minValue || value > maxValue))
                                     {
