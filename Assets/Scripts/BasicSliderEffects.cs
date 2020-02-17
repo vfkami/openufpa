@@ -11,14 +11,18 @@ public class BasicSliderEffects : MonoBehaviour
 {
     int _id;
     string _label;
-    
-
+    private bool _invertedSelection = false;
     public void OnValueChanged()
     {
+        _invertedSelection = GetComponentInChildren<Toggle>().isOn;
         GameObject poiManager = GameObject.Find("POIManager");
-        poiManager.GetComponent<PoiManagerBehavior>().UpdateVisualizationContinuum(_id, 
-            new Vector2(GetComponentInChildren<MinMaxSlider>().Values.minValue, 
-                GetComponentInChildren<MinMaxSlider>().Values.maxValue));
+
+        List<String> parameters = new List<string> {
+            GetComponentInChildren<MinMaxSlider>().Values.minValue.ToString(),
+            GetComponentInChildren<MinMaxSlider>().Values.maxValue.ToString()
+        };
+        
+        poiManager.GetComponent<PoiManagerBehavior>().UpdateVisualization(_id, parameters, _invertedSelection);
     }
 
     public void setSliderBasics(int index, string attributeName)

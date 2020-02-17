@@ -73,7 +73,7 @@ public class CanvasBehavior : MonoBehaviour
                 GameObject newSlider = InstantiateNewSlider(index, label);
 
                 if (tipo == typeof(int))
-                    newSlider.GetComponentInChildren<MinMaxSlider>().wholeNumbers = false;
+                    newSlider.GetComponentInChildren<MinMaxSlider>().wholeNumbers = true;
                 
                 newSlider.GetComponentInChildren<MinMaxSlider>().UpdateText();
                 listOfSliders.Add(newSlider);
