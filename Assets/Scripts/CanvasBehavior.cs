@@ -15,18 +15,22 @@ public class CanvasBehavior : MonoBehaviour
     private GameObject _minMaxSliderTemplate;
     
     //Canvas GOs
-    public Button menuButton;
     public GameObject filterMenu;
-    public Dropdown attributeSelector;
     public List<GameObject> listOfSliders;
     public List<GameObject> listOfCheckGroup;
-    
+
+    public GameObject dpd_Altura;
+    public GameObject dpd_Largura;
+
     //Variables
     private bool _filterVisibility;
     private List<string[]> _poiInfos;
     private List<Type> _newTypeList;
     private List<string> _newOptions;
 
+    private List<String> Options;
+    private List<Type> Tipos;
+    
     private void Awake()
     {
         _checkGroupTemplate = GameObject.Find("Template_CheckboxGroup");
@@ -38,9 +42,19 @@ public class CanvasBehavior : MonoBehaviour
 
     void Start()
     {
+        Tipos = poiManager.GetComponent<DatasetReader>().GetLabelTypes();
         _poiInfos = poiManager.GetComponent<DatasetReader>().GetPoiList();
+
+        populateHWDropdown(poiManager.GetComponent<DatasetReader>().GetDatabaseLabel(), Tipos, dpd_Altura);
+        populateHWDropdown(poiManager.GetComponent<DatasetReader>().GetDatabaseLabel(), Tipos, dpd_Largura);
     }
-    
+
+    void Update()
+    {
+        Options = poiManager.GetComponent<DatasetReader>().GetDatabaseLabel();
+        Tipos = poiManager.GetComponent<DatasetReader>().GetLabelTypes();
+    }
+
     public void ChangeFilterMenuVisibility()
     {
         _filterVisibility = !_filterVisibility;
@@ -169,6 +183,33 @@ public class CanvasBehavior : MonoBehaviour
         }
         return categories;
     }
-    
+
+    void populateHWDropdown(List<string> options, List<Type> optionsTypes, GameObject dropdown)
+    {
+        List<string> cloneOptions = new List<string>(options);
+        List<Type> cloneTypes = new List<Type>(optionsTypes);
+        
+        dropdown.GetComponent<Dropdown>().ClearOptions();
+        
+        // Remove Exceptions
+        for (int i = 0; i < 4; i++)
+        {
+            cloneOptions.RemoveAt(0);
+            cloneTypes.RemoveAt(0);
+        }
+
+        // Add Default Button
+        List<string> tempOptions = new List<string> {"- selecione -"};
+
+        for (int i = 0; i < cloneTypes.Count; i++)
+        {
+            if (cloneTypes[i] != typeof(String) && cloneTypes[i] != typeof(bool))
+            {
+                tempOptions.Add(cloneOptions[i]);
+            }
+        }
+        
+        dropdown.GetComponent<Dropdown>().AddOptions(tempOptions);
+}
 }
 

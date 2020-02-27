@@ -26,7 +26,6 @@ public class DatasetReader : MonoBehaviour
     {
         ReadTextFile();
     }
-
     private void ReadTextFile() // atributos separados por ','
     {
         StreamReader file = new StreamReader(datasetPath);
@@ -98,4 +97,5 @@ public class DatasetReader : MonoBehaviour
     {
         return _labelTypes;
     }
+
 }

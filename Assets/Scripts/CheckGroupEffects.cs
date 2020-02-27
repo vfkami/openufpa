@@ -14,7 +14,7 @@ public class CheckGroupEffects : MonoBehaviour
     private List<GameObject> finalToggleList = new List<GameObject>();
     int _id;
     string _label;
-
+    
     public void setGroupBasics(int index, string attributeName)
     {
         _id = index;
@@ -47,11 +47,12 @@ public class CheckGroupEffects : MonoBehaviour
         foreach (GameObject toggle in finalToggleList)
         {
             if (!toggle.GetComponent<Toggle>().isOn)
-            { //se toggle desativado = adiciona a lista de parametros para deixarem de ser exibidos
+            { //se toggle desativado = adiciona a lista de parametros para deixarem de ser exibido
                 parameters.Add(toggle.GetComponentInChildren<Text>().text);
             }
         }
-        poiManager.GetComponent<PoiManagerBehavior>().UpdateVisualization(_id, parameters, false);
+       
+        poiManager.GetComponent<PoiManagerBehavior>().UpdateVisualization(_id, parameters);
     }
 
     

@@ -8,8 +8,7 @@ public class BasicDropdownEffects : MonoBehaviour
 {
     public GameObject POIManager;
     public Canvas MainCanvas;
-    
-    
+
     private List<Type> newTypeList;
     List<string> newOptions = new List<string>();
     
@@ -17,35 +16,31 @@ public class BasicDropdownEffects : MonoBehaviour
     void Start()
     {
         newOptions = PopulateDropdown(POIManager.GetComponent<DatasetReader>().GetDatabaseLabel());
-        newTypeList = POIManager.GetComponent<DatasetReader>().GetLabelTypes();
-        
-        newTypeList[0] = null;
-        newTypeList.RemoveRange(1, 3);
-    }
+        newTypeList = new List<Type>(POIManager.GetComponent<DatasetReader>().GetLabelTypes()) {[0] = null};
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        newTypeList.RemoveRange(1, 3);
     }
     
     List<String> PopulateDropdown (List<string> options) {
         GetComponent<Dropdown>().ClearOptions();
         
-        // Add Default Button
-        options.Insert(0, "- selecione -");
+        List<string> tempOptions = new List<string>(options);
         
         // Remove Exceptions
-        options.Remove("sigla");
-        options.Remove("lat");
-        options.Remove("long");
-        options.Remove("nome");
+        for (int i = 0; i <= 3; i++)
+            tempOptions.RemoveAt(0);
+        
+        
+        //Add Default Item
+        tempOptions.Insert(0, "- selecione -");
+
         
         // Finalize
-        GetComponent<Dropdown>().AddOptions(options);
-        return options;
+        GetComponent<Dropdown>().AddOptions(tempOptions);
+        
+        return tempOptions;
     }
-
+    
     public void ReturnOptionIndex()
     {
         int index = GetComponent<Dropdown>().value;
