@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -13,10 +11,9 @@ public class PoiManagerBehavior : MonoBehaviour
 {
     private GameObject[] _poiList;
     
-    Dictionary<int, List<string>> filterValues = //implementar esta bagaça amanhã
+    Dictionary<int, List<string>> filterValues = 
         new Dictionary<int, List<string>>();
     
-    private List<bool> invertedSelection = new List<bool>();
     private List<string[]> _poiInfos;
     private List<string> _poiLabels;
     private List<Type> _attributeTypes;
@@ -32,41 +29,36 @@ public class PoiManagerBehavior : MonoBehaviour
         _poiList = GameObject.FindGameObjectsWithTag("poi");
     }
 
-    public void UpdateVisualization(int index, List<string> parameters, bool invertedSelection)
+    public void RefreshVisualization()
     {
-        try
-        {
-            filterValues.Add(index, parameters);
-        }
-        catch (ArgumentException)
-        {
-            filterValues[index] = parameters;
-        }
-        
-        foreach (var poi in _poiList) //Verifica em cada POI da Lista
+        // verifica todos os POIs da Lista
+        foreach (GameObject poi in _poiList)
         {
             bool find = false;
-            foreach (var line in _poiInfos) //Verifica em cada linha da Base de dados
+            
+            // verifica cada linha da base de dados
+            foreach (string[] line in _poiInfos)
             {
-                if (line[0] == poi.GetComponent<PoiClass>().myPoi.GetPoiId()) //verifica se o POI consultado é o mesmo achado na linha consultada
+                // verifica se o poi atual é o da linha consultada
+                if (line[0] == poi.GetComponent<PoiClass>().myPoi.GetPoiId()) 
                 {
-                    foreach (var attribute in filterValues) // para cada filtro aplicado na lista de filtros
+                    //para cada filtro na lista de filtros
+                    foreach (KeyValuePair<int, List<string>> filter in filterValues)
                     {
-                        foreach (string parameter in attribute.Value)
+                        //para cada parâmetro dentro do atributo atual
+                        foreach (string par in filter.Value)
                         {
-                            print(_attributeTypes[attribute.Key]);
-                            
-                            print(parameter);
-                            
-                            if (_attributeTypes[attribute.Key] != typeof(String))
+                            if (_attributeTypes[filter.Key] != typeof(string))
                             {
-                                print("tipo string");
-                                int value = Convert.ToInt32(line[attribute.Key]);
-                                int minValue = Convert.ToInt32(attribute.Value[0]);
-                                int maxValue = Convert.ToInt32(attribute.Value[1]);
+                                int value = Convert.ToInt32(line[filter.Key]);
+                                int minValue = Convert.ToInt32(filter.Value[0]);
+                                int maxValue = Convert.ToInt32(filter.Value[1]);
+                                bool invSelection = Convert.ToBoolean(filter.Value[2]);
                                 
-                                if (invertedSelection && index == attribute.Key)
+                                //seleção invertida
+                                if (invSelection)
                                 {
+                                    print("Seleção invertida aplicada");
                                     if (!(value < minValue || value > maxValue))
                                     {
                                         poi.GetComponent<Renderer>().enabled = false;
@@ -84,17 +76,27 @@ public class PoiManagerBehavior : MonoBehaviour
                                     }
                                 }
                             }
+                            else
+                            {
+                                if (line[filter.Key] == par)
+                                {
+                                    poi.GetComponent<Renderer>().enabled = false;
+                                    find = true;
+                                    break;
+                                }
+                            }
+
                         }
                     }
                 }
-                if(!find)
-                    poi.GetComponent<Renderer>().enabled = true;
             }
+            if(!find)
+                poi.GetComponent<Renderer>().enabled = true;
         }
     }
-
     public void UpdateVisualization(int index, List<string> parameters)
     {
+        print("Aplicando filtros");
         try
         {
             filterValues.Add(index, parameters);
@@ -103,50 +105,15 @@ public class PoiManagerBehavior : MonoBehaviour
         {
             filterValues[index] = parameters;
         }
-
-        foreach (var values in filterValues.Values)
-        {
-            foreach (var el in values)
-            {
-                print(el);
-            }
-        }
         
-        foreach (var poi in _poiList) //Verifica em cada POI da Lista
-        {
-            bool find = false;
-            foreach (var line in _poiInfos) //Verifica em cada linha da Base de dados
-            {
-                if (line[0] == poi.GetComponent<PoiClass>().myPoi.GetPoiId()) //verifica se o POI consultado é o mesmo achado na linha consultada
-                {
-                    foreach (var attribute in filterValues) // para cada filtro aplicado na lista de filtros
-                    {
-                        foreach (string parameter in attribute.Value)
-                        {
-                            print(_attributeTypes[attribute.Key]);
-                            print(parameter);
-                            
-                            print("tipo string de verdade");
-                            if (line[attribute.Key] == parameter)
-                            {
-                                poi.GetComponent<Renderer>().enabled = false;
-                                find = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if(!find)
-                    poi.GetComponent<Renderer>().enabled = true;
-            }
-        }
+        RefreshVisualization();
     }
 
-    public void updateAltura(int index, string label)
+    public void UpdateAltura(int index, string label)
     {
-        int multiplier = 10;
+        print("Modificando altura de acordo com atributo " + label);
+        int multiplier = 30;
         List<float> tList = new List<float>();
-        print(index);
 
         for (int i = 0; i < _poiInfos.Count; i++)
         {
@@ -154,11 +121,6 @@ public class PoiManagerBehavior : MonoBehaviour
         }
 
         List<float> normalizedList = normalizeValues(tList);
-
-        foreach (var value in normalizedList)
-        {
-            print(value);
-        }
         
         for (int i = 0; i < _poiList.Length; i++)
         {
@@ -167,32 +129,7 @@ public class PoiManagerBehavior : MonoBehaviour
         }
         
     }
-
-    public void updateLargura(int index, string label)
-    {
-        int multiplier = 3;
-        List<float> tList = new List<float>();
-        print(index);
-
-        for (int i = 0; i < _poiInfos.Count; i++)
-        {
-            tList.Add(float.Parse(_poiInfos[i][index], CultureInfo.InvariantCulture.NumberFormat));
-        }
-
-        List<float> normalizedList = normalizeValues(tList);
-
-        foreach (var value in normalizedList)
-        {
-            print(value);
-        }
-        
-        for (int i = 0; i < _poiList.Length; i++)
-        {
-            var localScale = _poiList[i].GetComponent<Transform>().localScale;
-            _poiList[i].GetComponent<Transform>().localScale = new Vector3(normalizedList[i] * multiplier, localScale.y, localScale.z);
-        }    
-    }
-
+    
     List<float> normalizeValues(List<float> values)
     {
         float minValue = values.Min();

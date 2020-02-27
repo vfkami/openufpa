@@ -20,7 +20,6 @@ public class CanvasBehavior : MonoBehaviour
     public List<GameObject> listOfCheckGroup;
 
     public GameObject dpd_Altura;
-    public GameObject dpd_Largura;
 
     //Variables
     private bool _filterVisibility;
@@ -46,7 +45,6 @@ public class CanvasBehavior : MonoBehaviour
         _poiInfos = poiManager.GetComponent<DatasetReader>().GetPoiList();
 
         populateHWDropdown(poiManager.GetComponent<DatasetReader>().GetDatabaseLabel(), Tipos, dpd_Altura);
-        populateHWDropdown(poiManager.GetComponent<DatasetReader>().GetDatabaseLabel(), Tipos, dpd_Largura);
     }
 
     void Update()

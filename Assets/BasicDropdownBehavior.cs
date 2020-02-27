@@ -6,17 +6,15 @@ using UnityEngine.UI;
 
 public class BasicDropdownBehavior : MonoBehaviour
 {
-    private GameObject POIManager;
+    private GameObject _poiManager;
 
-    public void onValueChanged(int value)
+    public void OnValueChanged()
     {
-        //1 = largura
-        //0 = altura
-        POIManager = GameObject.Find("POIManager");
+        _poiManager = GameObject.Find("POIManager");
         int index = GetComponent<Dropdown>().value;
         string label = GetComponent<Dropdown>().options[index].text;
 
-        List<string> databaseLabels = new List<string>(POIManager.GetComponent<DatasetReader>().GetDatabaseLabel());
+        List<string> databaseLabels = new List<string>(_poiManager.GetComponent<DatasetReader>().GetDatabaseLabel());
 
         for (int i = 0; i < databaseLabels.Count; i++)
         {
@@ -26,15 +24,7 @@ public class BasicDropdownBehavior : MonoBehaviour
                 break;
             }
         }
-
-        if (value == 1)
-        {
-            POIManager.GetComponent<PoiManagerBehavior>().updateLargura(index, label);
-        }
-        else if (value == 0)
-        {
-            POIManager.GetComponent<PoiManagerBehavior>().updateAltura(index, label);
-        }
+        _poiManager.GetComponent<PoiManagerBehavior>().UpdateAltura(index, label);
     }
 
 
