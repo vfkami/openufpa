@@ -52,7 +52,7 @@ public class CheckGroupEffects : MonoBehaviour
             }
         }
        
-        poiManager.GetComponent<PoiManagerBehavior>().UpdateVisualization(_id, parameters);
+        poiManager.GetComponent<PoiManagerBehavior>().UpdateFilterList(_id, parameters);
     }
 
     

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Numerics;
 using Mapbox.Unity.Map;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Vector3 = UnityEngine.Vector3;
 
 public class PoiManagerBehavior : MonoBehaviour
@@ -17,6 +18,7 @@ public class PoiManagerBehavior : MonoBehaviour
     private List<string[]> _poiInfos;
     private List<string> _poiLabels;
     private List<Type> _attributeTypes;
+
 
     private void Start()
     {
@@ -94,7 +96,7 @@ public class PoiManagerBehavior : MonoBehaviour
                 poi.GetComponent<Renderer>().enabled = true;
         }
     }
-    public void UpdateVisualization(int index, List<string> parameters)
+    public void UpdateFilterList(int index, List<string> parameters)
     {
         print("Aplicando filtros");
         try

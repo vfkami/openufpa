@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Mapbox.Unity.MeshGeneration.Modifiers.MeshModifiers;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class CanvasBehavior : MonoBehaviour
 {
+    
     //Out of Canvas GOs
     public GameObject poiManager;
 
@@ -18,8 +20,9 @@ public class CanvasBehavior : MonoBehaviour
     public GameObject filterMenu;
     public List<GameObject> listOfSliders;
     public List<GameObject> listOfCheckGroup;
+    public GameObject dpdAltura;
+    private GameObject _poiInfoDisplay;
 
-    public GameObject dpd_Altura;
 
     //Variables
     private bool _filterVisibility;
@@ -32,22 +35,27 @@ public class CanvasBehavior : MonoBehaviour
     
     private void Awake()
     {
+        _poiInfoDisplay = GameObject.Find("POInfo");
         _checkGroupTemplate = GameObject.Find("Template_CheckboxGroup");
         _minMaxSliderTemplate = GameObject.Find("Template_MinMaxSlider");
         _minMaxSliderTemplate.SetActive(false);
         _checkGroupTemplate.SetActive(false);
         filterMenu.SetActive(false);
+        _poiInfoDisplay.SetActive(false);
+
     }
 
-    void Start()
+    private void Start()
     {
+        HidePOIInfo();
+        
         Tipos = poiManager.GetComponent<DatasetReader>().GetLabelTypes();
         _poiInfos = poiManager.GetComponent<DatasetReader>().GetPoiList();
 
-        populateHWDropdown(poiManager.GetComponent<DatasetReader>().GetDatabaseLabel(), Tipos, dpd_Altura);
+        populateHWDropdown(poiManager.GetComponent<DatasetReader>().GetDatabaseLabel(), Tipos, dpdAltura);
     }
 
-    void Update()
+    private void Update()
     {
         Options = poiManager.GetComponent<DatasetReader>().GetDatabaseLabel();
         Tipos = poiManager.GetComponent<DatasetReader>().GetLabelTypes();
@@ -71,7 +79,7 @@ public class CanvasBehavior : MonoBehaviour
             {
                 foreach (var slider in listOfSliders)
                 {
-                    if (slider.GetComponent<BasicSliderEffects>().getID() != index)
+                    if (slider.GetComponent<BasicSliderEffects>().GetId() != index)
                         slider.SetActive(false);
                     else
                     {
@@ -109,11 +117,9 @@ public class CanvasBehavior : MonoBehaviour
                 }
             }
 
-            if (!find)//se nao existe = instancia novo
-            {
-                GameObject newCheckGroup = InstantiateNewCheckGroup(index, label);
-                listOfCheckGroup.Add(newCheckGroup);
-            }
+            if (find) return;
+            GameObject newCheckGroup = InstantiateNewCheckGroup(index, label);
+            listOfCheckGroup.Add(newCheckGroup);
         }
     }
 
@@ -138,7 +144,7 @@ public class CanvasBehavior : MonoBehaviour
 
         slider.GetComponent<RectTransform>().localPosition = _minMaxSliderTemplate.GetComponent<RectTransform>().localPosition;
         slider.name = "Slider_" + listOfSliders.Count;
-        slider.GetComponent<BasicSliderEffects>().setSliderBasics(index, label);
+        slider.GetComponent<BasicSliderEffects>().SetSliderBasics(index, label);
         slider.GetComponentInChildren<MinMaxSlider>().SetLimits(minMax.x, minMax.y);
         slider.SetActive(true);
 
@@ -208,6 +214,32 @@ public class CanvasBehavior : MonoBehaviour
         }
         
         dropdown.GetComponent<Dropdown>().AddOptions(tempOptions);
-}
+    }
+
+    public void UpdatePoiDisplayed(string poiName)
+    {
+         _poiInfoDisplay.gameObject.SetActive(true);
+         _poiInfoDisplay.GetComponentInChildren<Text>().text = "";
+
+         List<string> labels = poiManager.GetComponent<DatasetReader>().GetDatabaseLabel();
+         
+         string[] poiInfos = poiManager.GetComponent<DatasetReader>().getPoiInformation(poiName);
+
+         for (int i = 0; i < poiInfos.Length; i++)
+         {
+             _poiInfoDisplay.GetComponentInChildren<Text>().text += labels[i] + ": " + poiInfos[i];
+
+             if (poiInfos.Length - i > 1)
+             {
+                 _poiInfoDisplay.GetComponentInChildren<Text>().text += ",\n";
+             }
+         }
+    }
+
+    public void HidePOIInfo()
+    {
+        _poiInfoDisplay.gameObject.SetActive(false);
+    }
+    
 }
 

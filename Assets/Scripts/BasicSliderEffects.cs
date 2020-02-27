@@ -9,8 +9,8 @@ using UnityEngine.UI;
 
 public class BasicSliderEffects : MonoBehaviour
 {
-    int _id;
-    string _label;
+    private int _id;
+    private string _label;
     
     public void OnValueChanged()
     {
@@ -22,16 +22,16 @@ public class BasicSliderEffects : MonoBehaviour
             GetComponentInChildren<Toggle>().isOn.ToString()
         };
         
-        poiManager.GetComponent<PoiManagerBehavior>().UpdateVisualization(_id, parameters);
+        poiManager.GetComponent<PoiManagerBehavior>().UpdateFilterList(_id, parameters);
     }
 
-    public void setSliderBasics(int index, string attributeName)
+    public void SetSliderBasics(int index, string attributeName)
     {
         _id = index;
         _label = attributeName;
     }
 
-    public int getID() {return _id;}
+    public int GetId() {return _id;}
     
     
     

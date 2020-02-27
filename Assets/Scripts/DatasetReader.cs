@@ -98,4 +98,15 @@ public class DatasetReader : MonoBehaviour
         return _labelTypes;
     }
 
+
+    public string[] getPoiInformation(string poiName)
+    {
+        foreach (string[] line in _poiDataset)
+        {
+            if (line[0] == poiName)
+                return line;
+        }
+        return new string[] {};
+    }
+
 }
