@@ -18,7 +18,20 @@ public class SinglePOIBehavior : MonoBehaviour
     {
         _canvas = GameObject.Find("Canvas");
         _canvas.GetComponent<CanvasBehavior>().HidePOIInfo();
+    }
 
+    public void ColorSetter(Color newColor)
+    {
+        GetComponent<Renderer>().material.color = newColor;
+    }
 
+    public void HeightSetter(Vector3 newSize)
+    {
+        GetComponent<Transform>().localScale = newSize;
+    }
+
+    public void OnMouseDown()
+    {
+        _canvas.GetComponent<CanvasBehavior>().UpdateHeaderText(name);
     }
 }

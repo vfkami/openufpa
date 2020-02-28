@@ -22,6 +22,7 @@ public class CanvasBehavior : MonoBehaviour
     public List<GameObject> listOfCheckGroup;
     public GameObject dpdAltura;
     private GameObject _poiInfoDisplay;
+    private GameObject _canvasHeader;
 
 
     //Variables
@@ -38,6 +39,7 @@ public class CanvasBehavior : MonoBehaviour
         _poiInfoDisplay = GameObject.Find("POInfo");
         _checkGroupTemplate = GameObject.Find("Template_CheckboxGroup");
         _minMaxSliderTemplate = GameObject.Find("Template_MinMaxSlider");
+        _canvasHeader = GameObject.Find("CanvasHeader");
         _minMaxSliderTemplate.SetActive(false);
         _checkGroupTemplate.SetActive(false);
         filterMenu.SetActive(false);
@@ -152,7 +154,7 @@ public class CanvasBehavior : MonoBehaviour
     }
     
 
-    private Vector2 GetMinMaxValueFromAttribute(int index)
+    public Vector2 GetMinMaxValueFromAttribute(int index)
     {
         Vector2 minMaxValue; // MinMaxValue[0] = Min, MinMaxValue[1] = Max
         
@@ -174,7 +176,7 @@ public class CanvasBehavior : MonoBehaviour
         return minMaxValue;
     }
 
-    private List<string> GetAllCategoriesFromAttribute(int index)
+    public List<string> GetAllCategoriesFromAttribute(int index)
     {
         List<string> categories = new List<string>();
         foreach (string[] line in _poiInfos)
@@ -239,6 +241,19 @@ public class CanvasBehavior : MonoBehaviour
     public void HidePOIInfo()
     {
         _poiInfoDisplay.gameObject.SetActive(false);
+    }
+
+    public void UpdateHeaderText(string poiName)
+    {
+        foreach (var line in _poiInfos)
+        {
+            if (line[0] == poiName)
+            {
+                _canvasHeader.GetComponentInChildren<Text>().text = line[3];
+                return;
+            }
+        }
+        _canvasHeader.GetComponent<Text>().text = poiName;
     }
     
 }

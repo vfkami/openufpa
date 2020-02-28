@@ -17,23 +17,19 @@ public class BasicDropdownEffects : MonoBehaviour
     {
         newOptions = PopulateDropdown(POIManager.GetComponent<DatasetReader>().GetDatabaseLabel());
         newTypeList = new List<Type>(POIManager.GetComponent<DatasetReader>().GetLabelTypes()) {[0] = null};
-
         newTypeList.RemoveRange(1, 3);
     }
     
     List<String> PopulateDropdown (List<string> options) {
         GetComponent<Dropdown>().ClearOptions();
-        
         List<string> tempOptions = new List<string>(options);
         
         // Remove Exceptions
         for (int i = 0; i <= 3; i++)
             tempOptions.RemoveAt(0);
         
-        
         //Add Default Item
         tempOptions.Insert(0, "- selecione -");
-
         
         // Finalize
         GetComponent<Dropdown>().AddOptions(tempOptions);
@@ -51,5 +47,18 @@ public class BasicDropdownEffects : MonoBehaviour
                 newOptions[index], 
                 newTypeList[index]);
         }
+    }
+    
+    
+    public void ColorChanger()
+    {
+        int index = GetComponent<Dropdown>().value;
+        if (index != 0)
+        {
+            POIManager.GetComponent<PoiManagerBehavior>().UpdatePoiColorByAttribute(index + 3);
+            return;
+        }
+        POIManager.GetComponent<PoiManagerBehavior>().UpdatePoiColorByAttribute(0);
+        
     }
 }

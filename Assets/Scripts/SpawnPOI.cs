@@ -19,8 +19,11 @@ public class SpawnPOI : MonoBehaviour
 
     List<GameObject> _spawnedObjects;
 
+    private GameObject Canvas;
+
     void Start()
     {
+        Canvas = GameObject.Find("Canvas");
         GameObject poiManager = GameObject.Find("POIManager");
         List<string[]> Dataset = poiManager.GetComponent<DatasetReader>().GetPoiList();
         
