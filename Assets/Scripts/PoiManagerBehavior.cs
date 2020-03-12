@@ -22,7 +22,7 @@ public class PoiManagerBehavior : MonoBehaviour
     private List<string> _poiLabels;
     private List<Type> _attributeTypes;
     
-    private readonly List<Color> _colorPallet = new List<Color>()
+    private readonly List<Color> _colorPallet = new List<Color>
     {
         new Color(0.992F, 0.749F, 0.435F),
         new Color(0.890F, 0.101F, 0.109F),

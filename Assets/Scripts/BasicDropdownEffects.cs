@@ -2,24 +2,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class BasicDropdownEffects : MonoBehaviour
 {
-    public GameObject POIManager;
-    public Canvas MainCanvas;
+    ///  Esse script é utilizado por todos os dropdowns que necessitam
+    ///  mostrar todos os atributos da base. Além disso, ele precisa do
+    ///  PoiManager para funcionar (onde está o script que lê e armazena
+    ///  a base de dados) e o Canvas para exibir as opções no dropdown em
+    ///  questão
 
-    private List<Type> newTypeList;
-    List<string> newOptions = new List<string>();
+
+    public GameObject poiManager;
+    public Canvas mainCanvas;
+
+    private List<Type> _newTypeList;
+    List<string> _newOptions = new List<string>();
     
     // Start is called before the first frame update
     void Start()
     {
-        newOptions = PopulateDropdown(POIManager.GetComponent<DatasetReader>().GetDatabaseLabel());
-        newTypeList = new List<Type>(POIManager.GetComponent<DatasetReader>().GetLabelTypes()) {[0] = null};
-        newTypeList.RemoveRange(1, 3);
+        _newOptions = PopulateDropdown(poiManager.GetComponent<DatasetReader>().GetDatabaseLabel());
+        _newTypeList = new List<Type>(poiManager.GetComponent<DatasetReader>().GetLabelTypes()) {[0] = null};
+        _newTypeList.RemoveRange(1, 3);
     }
     
+    // Limpa a lista de opções e insere os
+    // atributos da base de dados como
+    // opções para seleção do usuário
     List<String> PopulateDropdown (List<string> options) {
         GetComponent<Dropdown>().ClearOptions();
         List<string> tempOptions = new List<string>(options);
@@ -37,15 +48,16 @@ public class BasicDropdownEffects : MonoBehaviour
         return tempOptions;
     }
     
+    // retorna a opção selecionada pelo usuário
     public void ReturnOptionIndex()
     {
         int index = GetComponent<Dropdown>().value;
         if (index != 0)
         {
-            MainCanvas.GetComponent<CanvasBehavior>().DropdownOptionReturn(
+            mainCanvas.GetComponent<CanvasBehavior>().GetDropdownOption(
                 index + 3, 
-                newOptions[index], 
-                newTypeList[index]);
+                _newOptions[index], 
+                _newTypeList[index]);
         }
     }
     
@@ -55,10 +67,10 @@ public class BasicDropdownEffects : MonoBehaviour
         int index = GetComponent<Dropdown>().value;
         if (index != 0)
         {
-            POIManager.GetComponent<PoiManagerBehavior>().UpdatePoiColorByAttribute(index + 3);
+            poiManager.GetComponent<PoiManagerBehavior>().UpdatePoiColorByAttribute(index + 3);
             return;
         }
-        POIManager.GetComponent<PoiManagerBehavior>().UpdatePoiColorByAttribute(0);
+        poiManager.GetComponent<PoiManagerBehavior>().UpdatePoiColorByAttribute(0);
         
     }
 }

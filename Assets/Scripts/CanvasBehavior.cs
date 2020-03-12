@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using Assets.Mapbox.Unity.MeshGeneration.Modifiers.MeshModifiers;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+
+/*
+ * Esse script coordena todos os elementos do Canvas.
+ */
 
 public class CanvasBehavior : MonoBehaviour
 {
-    
     //Out of Canvas GOs
     public GameObject poiManager;
 
@@ -23,16 +23,15 @@ public class CanvasBehavior : MonoBehaviour
     public GameObject dpdAltura;
     private GameObject _poiInfoDisplay;
     private GameObject _canvasHeader;
-
-
+    
     //Variables
     private bool _filterVisibility;
     private List<string[]> _poiInfos;
     private List<Type> _newTypeList;
     private List<string> _newOptions;
 
-    private List<String> Options;
-    private List<Type> Tipos;
+    private List<String> _options;
+    private List<Type> _tipos;
     
     private void Awake()
     {
@@ -44,32 +43,25 @@ public class CanvasBehavior : MonoBehaviour
         _checkGroupTemplate.SetActive(false);
         filterMenu.SetActive(false);
         _poiInfoDisplay.SetActive(false);
-
+        _poiInfoDisplay.gameObject.SetActive(false);
     }
 
     private void Start()
     {
-        HidePOIInfo();
-        
-        Tipos = poiManager.GetComponent<DatasetReader>().GetLabelTypes();
+        _tipos = poiManager.GetComponent<DatasetReader>().GetLabelTypes();
         _poiInfos = poiManager.GetComponent<DatasetReader>().GetPoiList();
 
-        populateHWDropdown(poiManager.GetComponent<DatasetReader>().GetDatabaseLabel(), Tipos, dpdAltura);
+        populateHWDropdown(poiManager.GetComponent<DatasetReader>().GetDatabaseLabel(), _tipos, dpdAltura);
     }
-
-    private void Update()
-    {
-        Options = poiManager.GetComponent<DatasetReader>().GetDatabaseLabel();
-        Tipos = poiManager.GetComponent<DatasetReader>().GetLabelTypes();
-    }
-
+    
+    // Quando o botão de menu for pressionado
     public void ChangeFilterMenuVisibility()
     {
         _filterVisibility = !_filterVisibility;
         filterMenu.SetActive(_filterVisibility);
     }
 
-    public void DropdownOptionReturn(int index, string label, Type tipo)
+    public void GetDropdownOption(int index, string label, Type tipo)
     {
         bool find = false;
         if (tipo == typeof(Int32) || tipo == typeof(float))
@@ -111,7 +103,7 @@ public class CanvasBehavior : MonoBehaviour
                 foreach (var checkGroup in listOfCheckGroup) //verificar se já existe
                 {
                     checkGroup.SetActive(false);
-                    if (checkGroup.GetComponent<CheckGroupEffects>().getID() == index) //se ja existe: ativa
+                    if (checkGroup.GetComponent<CheckGroupEffects>().GetId() == index) //se ja existe: ativa
                     {
                         checkGroup.SetActive(true);
                         find = true;
@@ -132,7 +124,7 @@ public class CanvasBehavior : MonoBehaviour
         
         checkgroup.GetComponent<RectTransform>().position = _checkGroupTemplate.GetComponent<RectTransform>().position;
         checkgroup.name = "CheckGroup_" + listOfCheckGroup.Count;
-        checkgroup.GetComponent<CheckGroupEffects>().setGroupBasics(index, label);
+        checkgroup.GetComponent<CheckGroupEffects>().SetGroupBasics(index, label);
         checkgroup.GetComponent<CheckGroupEffects>().UpdateCheckBoxes(categories);
         checkgroup.SetActive(true);
 

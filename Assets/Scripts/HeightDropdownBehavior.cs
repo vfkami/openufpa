@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BasicDropdownBehavior : MonoBehaviour
+public class HeightDropdownBehavior : MonoBehaviour
 {
-    private GameObject _poiManager;
+    /// Esse script é utilizado pelo GO Dpd_Altura e é responsável por
+    /// passar o atributo selecionado que irá determinar a altura dos POI's
 
+    private GameObject _poiManager;
+    
     public void OnValueChanged()
     {
         _poiManager = GameObject.Find("POIManager");
