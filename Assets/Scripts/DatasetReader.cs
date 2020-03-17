@@ -24,11 +24,11 @@ public class DatasetReader : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        ReadTextFile();
+        ReadTextFile(datasetPath);
     }
-    private void ReadTextFile() // atributos separados por ','
+    private void ReadTextFile(string path) // atributos separados por ','
     {
-        StreamReader file = new StreamReader(datasetPath);
+        StreamReader file = new StreamReader(path);
         bool firstLine = true;
         
         while (!file.EndOfStream)

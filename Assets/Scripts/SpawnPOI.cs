@@ -18,14 +18,15 @@ public class SpawnPOI : MonoBehaviour
     GameObject _PoiPrefab;
 
     List<GameObject> _spawnedObjects;
-
-    private GameObject Canvas;
-
+    
     void Start()
     {
-        Canvas = GameObject.Find("Canvas");
-        GameObject poiManager = GameObject.Find("POIManager");
-        List<string[]> Dataset = poiManager.GetComponent<DatasetReader>().GetPoiList();
+        InstantiatePOIs();
+    }
+
+    private void InstantiatePOIs()
+    {
+        List<string[]> Dataset = GetComponent<DatasetReader>().GetPoiList();
         
         //_locations = new Vector2d[Dataset.Count];
         _spawnedObjects = new List<GameObject>();
@@ -33,9 +34,10 @@ public class SpawnPOI : MonoBehaviour
         {
             // poi[0] = id | poi[1] = lat | poi[2] = long | poi[3] = descrição | poi[4] em diante = dados opcionais
             string location = poi[1] + ", " + poi[2];
+            print(location);
             _locations.Add(Conversions.StringToLatLon(location));
             
-            var instance = Instantiate(_PoiPrefab, poiManager.transform);
+            var instance = Instantiate(_PoiPrefab, transform);
             instance.transform.localPosition = _map.GeoToWorldPosition(_locations[_locations.Count-1]);
             instance.name = poi[0];
             instance.GetComponent<PoiClass>().myPoi.CreatePoi(poi[0], Convert.ToDouble(poi[1]), Convert.ToDouble(poi[2]), poi[3]);

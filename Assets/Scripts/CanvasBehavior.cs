@@ -18,6 +18,7 @@ public class CanvasBehavior : MonoBehaviour
     
     //Canvas GOs
     public GameObject filterMenu;
+    public GameObject heatMenu;
     public List<GameObject> listOfSliders;
     public List<GameObject> listOfCheckGroup;
     public GameObject dpdAltura;
@@ -42,6 +43,7 @@ public class CanvasBehavior : MonoBehaviour
         _minMaxSliderTemplate.SetActive(false);
         _checkGroupTemplate.SetActive(false);
         filterMenu.SetActive(false);
+        heatMenu.SetActive(false);
         _poiInfoDisplay.SetActive(false);
         _poiInfoDisplay.gameObject.SetActive(false);
     }
@@ -59,6 +61,7 @@ public class CanvasBehavior : MonoBehaviour
     {
         _filterVisibility = !_filterVisibility;
         filterMenu.SetActive(_filterVisibility);
+        heatMenu.SetActive(_filterVisibility);
     }
 
     public void GetDropdownOption(int index, string label, Type tipo)

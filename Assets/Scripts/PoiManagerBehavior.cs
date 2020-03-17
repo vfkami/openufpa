@@ -21,6 +21,7 @@ public class PoiManagerBehavior : MonoBehaviour
     private List<string[]> _poiInfos;
     private List<string> _poiLabels;
     private List<Type> _attributeTypes;
+
     
     private readonly List<Color> _colorPallet = new List<Color>
     {
@@ -43,10 +44,11 @@ public class PoiManagerBehavior : MonoBehaviour
         _poiInfos = GetComponent<DatasetReader>().GetPoiList();
         _poiLabels = GetComponent<DatasetReader>().GetDatabaseLabel();
         _attributeTypes = GetComponent<DatasetReader>().GetLabelTypes();
+        
         _mainCanvas = GameObject.Find("Canvas");
     }
 
-    void Update()
+    private void Update()
     {
         _poiList = GameObject.FindGameObjectsWithTag("poi");
     }
@@ -129,6 +131,7 @@ public class PoiManagerBehavior : MonoBehaviour
         
         RefreshVisualization();
     }
+    
 
     public void UpdateAltura(int index, string label)
     {
@@ -140,7 +143,7 @@ public class PoiManagerBehavior : MonoBehaviour
         for (int i = 0; i < _poiList.Length; i++)
         {
             var localScale = _poiList[i].GetComponent<Transform>().localScale;
-            _poiList[i].GetComponent<SinglePOIBehavior>().HeightSetter(new Vector3(localScale.x, (normalizedList[i] + + 0.5F) * multiplier, localScale.z));
+            _poiList[i].GetComponent<SinglePOIBehavior>().SizeSetter(new Vector3(localScale.x, (normalizedList[i] + + 0.5F) * multiplier, localScale.z));
         }
         
     }
