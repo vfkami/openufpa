@@ -13,18 +13,22 @@ public class BasicDropdownEffects : MonoBehaviour
     ///  a base de dados) e o Canvas para exibir as opções no dropdown em
     ///  questão
 
-
-    public GameObject poiManager;
-    public Canvas mainCanvas;
+    public string parent;
+    
+    private GameObject _goManager;
+    private GameObject _mainCanvas;
 
     private List<Type> _newTypeList;
-    List<string> _newOptions = new List<string>();
+    private List<string> _newOptions = new List<string>();
     
     // Start is called before the first frame update
     void Start()
     {
-        _newOptions = PopulateDropdown(poiManager.GetComponent<DatasetReader>().GetDatabaseLabel());
-        _newTypeList = new List<Type>(poiManager.GetComponent<DatasetReader>().GetLabelTypes()) {[0] = null};
+        _goManager = GameObject.Find(parent);
+        _mainCanvas = GameObject.Find("Canvas");
+        
+        _newOptions = PopulateDropdown(_goManager.GetComponent<DatasetReader>().GetDatabaseLabel());
+        _newTypeList = new List<Type>(_goManager.GetComponent<DatasetReader>().GetLabelTypes()) {[0] = null};
         _newTypeList.RemoveRange(1, 3);
     }
     
@@ -49,12 +53,12 @@ public class BasicDropdownEffects : MonoBehaviour
     }
     
     // retorna a opção selecionada pelo usuário
-    public void ReturnOptionIndex()
+    public void GetDropdownValue()
     {
         int index = GetComponent<Dropdown>().value;
         if (index != 0)
         {
-            mainCanvas.GetComponent<CanvasBehavior>().GetDropdownOption(
+            _mainCanvas.GetComponent<CanvasBehavior>().GetDropdownOption(
                 index + 3, 
                 _newOptions[index], 
                 _newTypeList[index]);
@@ -65,12 +69,24 @@ public class BasicDropdownEffects : MonoBehaviour
     public void ColorChanger()
     {
         int index = GetComponent<Dropdown>().value;
-        if (index != 0)
+
+        if (parent == "POIManager")
         {
-            poiManager.GetComponent<PoiManagerBehavior>().UpdatePoiColorByAttribute(index + 3);
-            return;
+            if (index != 0)
+            {
+                _goManager.GetComponent<PoiManagerBehavior>().UpdatePoiColorByAttribute(index + 3);
+                return;
+            }
+            _goManager.GetComponent<PoiManagerBehavior>().UpdatePoiColorByAttribute(0);
         }
-        poiManager.GetComponent<PoiManagerBehavior>().UpdatePoiColorByAttribute(0);
-        
+        else
+        {
+            if (index != 0)
+            {
+                _goManager.GetComponent<HeatManagerBehavior>().UpdateHeatPointColorByAttribute(index + 3);
+                return;
+            }
+            _goManager.GetComponent<HeatManagerBehavior>().UpdateHeatPointColorByAttribute(0);
+        }
     }
 }

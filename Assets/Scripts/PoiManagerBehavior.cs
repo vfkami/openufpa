@@ -22,6 +22,8 @@ public class PoiManagerBehavior : MonoBehaviour
     private List<string> _poiLabels;
     private List<Type> _attributeTypes;
 
+    private GameObject _utils;
+
     
     private readonly List<Color> _colorPallet = new List<Color>
     {
@@ -29,10 +31,10 @@ public class PoiManagerBehavior : MonoBehaviour
         new Color(0.890F, 0.101F, 0.109F),
         new Color(0.121F, 0.470F, 0.705F),
         new Color(0.415F, 0.239F, 0.603F),
-        new Color(0.698F, 0.874F, 0.541F),
         new Color(0.2F, 0.627F, 0.172F),
         new Color(1F, 0.498F, 0F),
         new Color(0.984F, 0.603F, 0.6F),
+        new Color(0.698F, 0.874F, 0.541F),
         new Color(0.792F, 0.698F, 0.839F),
         new Color(0.650F, 0.807F, 0.890F),
         new Color(1F, 1F, 0.6F),
@@ -46,6 +48,7 @@ public class PoiManagerBehavior : MonoBehaviour
         _attributeTypes = GetComponent<DatasetReader>().GetLabelTypes();
         
         _mainCanvas = GameObject.Find("Canvas");
+        _utils = GameObject.Find("Utils");
     }
 
     private void Update()
@@ -133,39 +136,18 @@ public class PoiManagerBehavior : MonoBehaviour
     }
     
 
-    public void UpdateAltura(int index, string label)
+    public void UpdateHeight(int index, string label)
     {
         print("Modificando altura de acordo com atributo " + label);
         int multiplier = 30;
 
-        List<float> normalizedList = normalizeValues(index);
+        List<float> normalizedList = _utils.GetComponent<ProjectUtils>().NormalizeValues(index, _poiInfos);
         
         for (int i = 0; i < _poiList.Length; i++)
         {
             var localScale = _poiList[i].GetComponent<Transform>().localScale;
             _poiList[i].GetComponent<SinglePOIBehavior>().SizeSetter(new Vector3(localScale.x, (normalizedList[i] + + 0.5F) * multiplier, localScale.z));
         }
-        
-    }
-    
-    List<float> normalizeValues(int index)
-    {
-        List<float> tList = new List<float>();
-        foreach (string[] info in _poiInfos)
-        {
-            tList.Add(float.Parse(info[index], CultureInfo.InvariantCulture.NumberFormat));
-        }
-        
-        float minValue = tList.Min();
-        float maxValue = tList.Max();
-        
-        List<float> normalizedValues = new List<float>();
-        foreach (var value in tList)
-        {
-            float tempValue = (value - minValue)/(maxValue - minValue);
-            normalizedValues.Add(tempValue);
-        }
-        return normalizedValues;
     }
 
 
@@ -182,7 +164,7 @@ public class PoiManagerBehavior : MonoBehaviour
         }
         if (_attributeTypes[attIndex] == typeof(string)) // se for categorico
         {
-            List<string> categories = new List<string>(_mainCanvas.GetComponent<CanvasBehavior>().GetAllCategoriesFromAttribute(attIndex));
+            List<string> categories = new List<string>(_utils.GetComponent<ProjectUtils>().GetAllCategoriesFromAttribute(attIndex, _poiInfos));
 
             foreach (var poi in _poiList)
             {
@@ -201,8 +183,8 @@ public class PoiManagerBehavior : MonoBehaviour
             return;
         }
         // se for contínuo
-        List<float> normalizedList = normalizeValues(attIndex);
-
+        
+        List<float> normalizedList = _utils.GetComponent<ProjectUtils>().NormalizeValues(attIndex, _poiInfos);
         for (int i = 0; i < _poiList.Length; i++)
         {
             Color newColor = Color.HSVToRGB(1, normalizedList[i] + 0.1F, 1);

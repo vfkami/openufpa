@@ -34,7 +34,6 @@ public class SpawnPOI : MonoBehaviour
         {
             // poi[0] = id | poi[1] = lat | poi[2] = long | poi[3] = descrição | poi[4] em diante = dados opcionais
             string location = poi[1] + ", " + poi[2];
-            print(location);
             _locations.Add(Conversions.StringToLatLon(location));
             
             var instance = Instantiate(_PoiPrefab, transform);

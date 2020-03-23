@@ -21,9 +21,12 @@ public class CanvasBehavior : MonoBehaviour
     public GameObject heatMenu;
     public List<GameObject> listOfSliders;
     public List<GameObject> listOfCheckGroup;
-    public GameObject dpdAltura;
+    public GameObject poi_dpdAltura;
+    public GameObject ht_dpdAltura;
     private GameObject _poiInfoDisplay;
     private GameObject _canvasHeader;
+
+    private GameObject _utils;
     
     //Variables
     private bool _filterVisibility;
@@ -40,6 +43,8 @@ public class CanvasBehavior : MonoBehaviour
         _checkGroupTemplate = GameObject.Find("Template_CheckboxGroup");
         _minMaxSliderTemplate = GameObject.Find("Template_MinMaxSlider");
         _canvasHeader = GameObject.Find("CanvasHeader");
+        _utils = GameObject.Find("Utils");
+        
         _minMaxSliderTemplate.SetActive(false);
         _checkGroupTemplate.SetActive(false);
         filterMenu.SetActive(false);
@@ -53,7 +58,8 @@ public class CanvasBehavior : MonoBehaviour
         _tipos = poiManager.GetComponent<DatasetReader>().GetLabelTypes();
         _poiInfos = poiManager.GetComponent<DatasetReader>().GetPoiList();
 
-        populateHWDropdown(poiManager.GetComponent<DatasetReader>().GetDatabaseLabel(), _tipos, dpdAltura);
+        //populateHWDropdown(poiManager.GetComponent<DatasetReader>().GetDatabaseLabel(), _tipos, poi_dpdAltura);
+
     }
     
     // Quando o botão de menu for pressionado
@@ -122,7 +128,7 @@ public class CanvasBehavior : MonoBehaviour
 
     private GameObject InstantiateNewCheckGroup(int index, string label)
     {
-        List<string> categories = GetAllCategoriesFromAttribute(index);
+        List<string> categories = _utils.GetComponent<ProjectUtils>().GetAllCategoriesFromAttribute(index, _poiInfos);
         GameObject checkgroup = Instantiate(_checkGroupTemplate, filterMenu.transform);
         
         checkgroup.GetComponent<RectTransform>().position = _checkGroupTemplate.GetComponent<RectTransform>().position;
@@ -136,7 +142,7 @@ public class CanvasBehavior : MonoBehaviour
 
     private GameObject InstantiateNewSlider(int index, string label)
     {
-        Vector2 minMax = GetMinMaxValueFromAttribute(index);
+        Vector2 minMax = _utils.GetComponent<ProjectUtils>().GetMinMaxValueFromAttribute(index, _poiInfos);
         GameObject slider = Instantiate(_minMaxSliderTemplate, filterMenu.transform);
 
         slider.GetComponent<RectTransform>().localPosition = _minMaxSliderTemplate.GetComponent<RectTransform>().localPosition;
@@ -148,71 +154,6 @@ public class CanvasBehavior : MonoBehaviour
         return slider;
     }
     
-
-    public Vector2 GetMinMaxValueFromAttribute(int index)
-    {
-        Vector2 minMaxValue; // MinMaxValue[0] = Min, MinMaxValue[1] = Max
-        
-        int min = 99999, 
-            max = 0;
-        
-        foreach (string[] line in _poiInfos)
-        {
-            int.TryParse(line[index], out var value);
-            if (min >= value)
-                min = value;
-            
-            if (max <= value)
-                max = value;
-        }
-
-        minMaxValue.x = min;
-        minMaxValue.y = max;
-        return minMaxValue;
-    }
-
-    public List<string> GetAllCategoriesFromAttribute(int index)
-    {
-        List<string> categories = new List<string>();
-        foreach (string[] line in _poiInfos)
-        {
-            string tempCategory = line[index];
-            if (!categories.Contains(tempCategory))
-            {
-                categories.Add(tempCategory);
-            }
-        }
-        return categories;
-    }
-
-    void populateHWDropdown(List<string> options, List<Type> optionsTypes, GameObject dropdown)
-    {
-        List<string> cloneOptions = new List<string>(options);
-        List<Type> cloneTypes = new List<Type>(optionsTypes);
-        
-        dropdown.GetComponent<Dropdown>().ClearOptions();
-        
-        // Remove Exceptions
-        for (int i = 0; i < 4; i++)
-        {
-            cloneOptions.RemoveAt(0);
-            cloneTypes.RemoveAt(0);
-        }
-
-        // Add Default Button
-        List<string> tempOptions = new List<string> {"- selecione -"};
-
-        for (int i = 0; i < cloneTypes.Count; i++)
-        {
-            if (cloneTypes[i] != typeof(String) && cloneTypes[i] != typeof(bool))
-            {
-                tempOptions.Add(cloneOptions[i]);
-            }
-        }
-        
-        dropdown.GetComponent<Dropdown>().AddOptions(tempOptions);
-    }
-
     public void UpdatePoiDisplayed(string poiName)
     {
          _poiInfoDisplay.gameObject.SetActive(true);

@@ -7,13 +7,15 @@ using UnityEngine;
 public class HeatManagerBehavior : MonoBehaviour
 {
     private GameObject[] _heatList;
+    private GameObject _utils;
 
     private List<string[]> _heatInfos;
     private List<string> _heatLabels;
     private List<Type> _attributeHTypes;
-
+    
     private void Start()
     {
+        _utils = GameObject.Find("Utils");
         
         _heatInfos = GetComponent<DatasetReader>().GetPoiList();
         _heatLabels = GetComponent<DatasetReader>().GetDatabaseLabel();
@@ -32,35 +34,37 @@ public class HeatManagerBehavior : MonoBehaviour
     {
         
         print("Modificando altura de acordo com atributo " + label);
-        int multiplier = 30;
+        int multiplier = 10;
 
-        List<float> normalizedList = normalizeValues(index);
+        List<float> normalizedList = _utils.GetComponent<ProjectUtils>().NormalizeValues(index, _heatInfos);
         
         for (int i = 0; i < _heatList.Length; i++)
         {
-            var localScale = _heatList[i].GetComponent<Transform>().localScale;
-            _heatList[i].GetComponent<SinglePOIBehavior>().SizeSetter(new Vector3(localScale.x, (normalizedList[i] + + 0.5F) * multiplier, localScale.z));
+            Vector3 localScale = _heatList[i].GetComponent<Transform>().localScale;
+            float newValue = (float)((normalizedList[i] + 0.5) * multiplier);
+            _heatList[i].GetComponent<SinglePOIBehavior>().SizeSetter(new Vector3(newValue, localScale.y, newValue));
         }    
     }
     
-    List<float> normalizeValues(int index) // criar utils script
+    public void UpdateHeatPointColorByAttribute(int attIndex)
     {
-        List<float> tList = new List<float>();
-        foreach (string[] info in _heatInfos)
+        if (attIndex == 0) //se nenhum atributo for escolhido
         {
-            tList.Add(float.Parse(info[index], CultureInfo.InvariantCulture.NumberFormat));
+            foreach (var poi in _heatList)
+            {
+                poi.GetComponent<SinglePOIBehavior>().ColorSetter(Color.gray);
+            }
+
+            return;
         }
-        
-        float minValue = tList.Min();
-        float maxValue = tList.Max();
-        
-        List<float> normalizedValues = new List<float>();
-        foreach (var value in tList)
+
+        List<float> normalizedList = _utils.GetComponent<ProjectUtils>().NormalizeValues(attIndex, _heatInfos);
+        for (int i = 0; i < _heatList.Length; i++)
         {
-            float tempValue = (value - minValue)/(maxValue - minValue);
-            normalizedValues.Add(tempValue);
+            Color newColor = Color.HSVToRGB(1, normalizedList[i] + 0.1F, 1);
+            newColor.a = 0.5F;
+            _heatList[i].GetComponent<SinglePOIBehavior>().ColorSetter(newColor);
         }
-        return normalizedValues;
     }
 
 }
