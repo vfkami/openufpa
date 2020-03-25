@@ -1,16 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Globalization;
 using System.Linq;
+using UnityEngine.UI;
 
 public class ProjectUtils : MonoBehaviour
 {
     // Start is called before the first frame update
-    public List<float> NormalizeValues(int index, List<string[]> DatabaseInfo)
+    public List<float> NormalizeValues(int index, List<string[]> databaseInfo)
     {
         List<float> tList = new List<float>();
-        foreach (string[] info in DatabaseInfo)        
+        foreach (string[] info in databaseInfo)        
         {
             tList.Add(float.Parse(info[index], CultureInfo.InvariantCulture.NumberFormat));
         }
@@ -62,5 +64,36 @@ public class ProjectUtils : MonoBehaviour
         }
         return categories;
     }
-    
+
+    public void DropdownOptions (Dropdown reference, GameObject goManager, bool isHeightDropdown)
+    {
+        print("calls");
+        List<string> options = new List<string>(goManager.GetComponent<DatasetReader>().GetDatabaseLabel());
+        List<Type> types = new List<Type>(goManager.GetComponent<DatasetReader>().GetLabelTypes());
+        
+        // Remove Exceptions
+        for (int i = 0; i < 4; i++)
+        {
+            options.RemoveAt(0);
+            types.RemoveAt(0);
+        }
+
+        List<string> tempOptions = new List<string> {"- selecione -"};
+
+        
+        if (isHeightDropdown)
+        {
+            for (int i = 0; i < types.Count; i++)
+            {
+                if (types[i] != typeof(String)) { tempOptions.Add(options[i]); }
+            }
+        }
+        else
+        {
+            tempOptions.AddRange(options);
+        }
+        // Finalize
+        reference.GetComponent<Dropdown>().ClearOptions();
+        reference.GetComponent<Dropdown>().AddOptions(tempOptions);
+    }
 }

@@ -96,7 +96,7 @@ public class MinMaxSlider : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 		onValueChanged.Invoke(this.minValue, this.maxValue);
 	}
 
-	private void RefreshSliders()
+	public void RefreshSliders()
 	{
 		SetSliderAnchors();
 

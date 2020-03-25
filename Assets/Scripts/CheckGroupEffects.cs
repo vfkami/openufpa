@@ -13,7 +13,6 @@ public class CheckGroupEffects : MonoBehaviour
     
     private List<GameObject> _finalToggleList = new List<GameObject>();
     private int _id;
-    private string _label;
     
     // Renomeia o texto dos checkbox para o nome de cada categoria recebida da base de dados 
     public void UpdateCheckBoxes(List<string> categories)
@@ -50,13 +49,8 @@ public class CheckGroupEffects : MonoBehaviour
         poiManager.GetComponent<PoiManagerBehavior>().UpdateFilterList(_id, parameters);
     }
 
-    // Armazena algumas informações fundamentais
-    // para o Groupbox quando ele for instanciado
-    public void SetGroupBasics(int index, string attributeName)
+    public void SetId(int id)
     {
-        _id = index;
-        _label = attributeName;
+        _id = id;
     }
-    
-    public int GetId() {return _id;}
 }

@@ -66,7 +66,7 @@ public class PoiManagerBehavior : MonoBehaviour
             foreach (string[] line in _poiInfos)
             {
                 // verifica se o poi atual é o da linha consultada
-                if (line[0] == poi.GetComponent<PoiClass>().myPoi.GetPoiId()) 
+                if (line[0] == poi.name) 
                 {
                     //para cada filtro na lista de filtros
                     foreach (KeyValuePair<int, List<string>> filter in filterValues)

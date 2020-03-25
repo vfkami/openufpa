@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class SinglePOIBehavior : MonoBehaviour
 {
+    // Esse script contem alguns comportamentos que os objetos instanciados
+    // terão na cena ao serem instanciados
+    
     private GameObject _canvas;
 
     private void Start()
@@ -12,19 +15,14 @@ public class SinglePOIBehavior : MonoBehaviour
         _canvas = GameObject.Find("Canvas");
     }
 
-    // Start is called before the first frame update
     private void OnMouseOver()
-    {
-        if (CompareTag("poi"))
-            _canvas.GetComponent<CanvasBehavior>().UpdatePoiDisplayed(name);
-        
-
+    { 
+        _canvas.GetComponent<CanvasBehavior>().UpdatePoiDisplayed(name, transform.parent);
     }
 
     private void OnMouseExit()
-    {
-        if (CompareTag("poi"))
-            _canvas.GetComponent<CanvasBehavior>().HidePOIInfo();
+    { 
+        _canvas.GetComponent<CanvasBehavior>().HidePoiInfo();
     }
 
     public void ColorSetter(Color newColor)

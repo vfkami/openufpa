@@ -9,13 +9,17 @@ public class HeightDropdownBehavior : MonoBehaviour
     /// Esse script é utilizado por Dropdowns de Altura e é responsável por
     /// passar o atributo selecionado que irá determinar a altura dos POI's
 
-    private GameObject goManager;
-    public string parent;
+    public string parent; //setado no editor
 
+    private GameObject _goManager;
+    private GameObject _utils;
+    
     private void Start()
     {
-        goManager = GameObject.Find(parent);
-        PopulateDropdown();
+        _utils = GameObject.Find("Utils");
+        _goManager = GameObject.Find(parent);
+        
+        _utils.GetComponent<ProjectUtils>().DropdownOptions(GetComponent<Dropdown>(), _goManager, true);
     }
 
     public void OnValueChanged()
@@ -23,7 +27,7 @@ public class HeightDropdownBehavior : MonoBehaviour
         int index = GetComponent<Dropdown>().value;
         string label = GetComponent<Dropdown>().options[index].text;
 
-        List<string> databaseLabels = new List<string>(goManager.GetComponent<DatasetReader>().GetDatabaseLabel());
+        List<string> databaseLabels = new List<string>(_goManager.GetComponent<DatasetReader>().GetDatabaseLabel());
 
         for (int i = 0; i < databaseLabels.Count; i++)
         {
@@ -34,37 +38,37 @@ public class HeightDropdownBehavior : MonoBehaviour
             }
         }
         if (parent == "POIManager") 
-           goManager.GetComponent<PoiManagerBehavior>().UpdateHeight(index, label);
+           _goManager.GetComponent<PoiManagerBehavior>().UpdateHeight(index, label);
         else
-            goManager.GetComponent<HeatManagerBehavior>().UpdateWeight(index, label);
+            _goManager.GetComponent<HeatManagerBehavior>().UpdateWeight(index, label);
 
     }
     
-    void PopulateDropdown()
-    {
-        List<string> options = new List<string>(goManager.GetComponent<DatasetReader>().GetDatabaseLabel());
-        List<Type> types = new List<Type>(goManager.GetComponent<DatasetReader>().GetLabelTypes());
-        
-        GetComponent<Dropdown>().ClearOptions();
-        
-        // Remove Exceptions
-        for (int i = 0; i < 4; i++)
-        {
-            options.RemoveAt(0);
-            types.RemoveAt(0);
-        }
-
-        // Add Default Button
-        List<string> tempOptions = new List<string> {"- selecione -"};
-
-        for (int i = 0; i < types.Count; i++)
-        {
-            if (types[i] != typeof(String) && types[i] != typeof(bool))
-            {
-                tempOptions.Add(options[i]);
-            }
-        }
-        
-        GetComponent<Dropdown>().AddOptions(tempOptions);
-    }
+    // void PopulateDropdown()
+    // {
+    //     List<string> options = new List<string>(_goManager.GetComponent<DatasetReader>().GetDatabaseLabel());
+    //     List<Type> types = new List<Type>(_goManager.GetComponent<DatasetReader>().GetLabelTypes());
+    //     
+    //     GetComponent<Dropdown>().ClearOptions();
+    //     
+    //     // Remove Exceptions
+    //     for (int i = 0; i < 4; i++)
+    //     {
+    //         options.RemoveAt(0);
+    //         types.RemoveAt(0);
+    //     }
+    //
+    //     // Add Default Button
+    //     List<string> tempOptions = new List<string> {"- selecione -"};
+    //
+    //     for (int i = 0; i < types.Count; i++)
+    //     {
+    //         if (types[i] != typeof(String) && types[i] != typeof(bool))
+    //         {
+    //             tempOptions.Add(options[i]);
+    //         }
+    //     }
+    //     
+    //     GetComponent<Dropdown>().AddOptions(tempOptions);
+    // }
 }

@@ -10,7 +10,8 @@ using UnityEngine.UI;
 public class CanvasBehavior : MonoBehaviour
 {
     //Out of Canvas GOs
-    public GameObject poiManager;
+    private GameObject _poiManager;
+    private GameObject _heatManager;
 
     //Prefabs
     private GameObject _checkGroupTemplate;
@@ -19,8 +20,10 @@ public class CanvasBehavior : MonoBehaviour
     //Canvas GOs
     public GameObject filterMenu;
     public GameObject heatMenu;
-    public List<GameObject> listOfSliders;
-    public List<GameObject> listOfCheckGroup;
+
+
+    private List<GameObject> _filters = new List<GameObject>();
+
     public GameObject poi_dpdAltura;
     public GameObject ht_dpdAltura;
     private GameObject _poiInfoDisplay;
@@ -30,13 +33,13 @@ public class CanvasBehavior : MonoBehaviour
     
     //Variables
     private bool _filterVisibility;
-    private List<string[]> _poiInfos;
-    private List<Type> _newTypeList;
-    private List<string> _newOptions;
-
-    private List<String> _options;
-    private List<Type> _tipos;
     
+    private List<string> _poiLabels;
+    private List<string[]> _poiInfos;
+    private List<Type> _poiLabelTypes;
+
+    
+
     private void Awake()
     {
         _poiInfoDisplay = GameObject.Find("POInfo");
@@ -55,11 +58,13 @@ public class CanvasBehavior : MonoBehaviour
 
     private void Start()
     {
-        _tipos = poiManager.GetComponent<DatasetReader>().GetLabelTypes();
-        _poiInfos = poiManager.GetComponent<DatasetReader>().GetPoiList();
-
-        //populateHWDropdown(poiManager.GetComponent<DatasetReader>().GetDatabaseLabel(), _tipos, poi_dpdAltura);
-
+        _poiManager = GameObject.Find("POIManager");
+        _heatManager = GameObject.Find("HeatManager");
+        
+        
+        _poiInfos = _poiManager.GetComponent<DatasetReader>().GetPoiList();
+        _poiLabels = _poiManager.GetComponent<DatasetReader>().GetDatabaseLabel();
+        _poiLabelTypes = _poiManager.GetComponent<DatasetReader>().GetLabelTypes();
     }
     
     // Quando o botão de menu for pressionado
@@ -70,111 +75,89 @@ public class CanvasBehavior : MonoBehaviour
         heatMenu.SetActive(_filterVisibility);
     }
 
-    public void GetDropdownOption(int index, string label, Type tipo)
+    public void ShowNewFilter(int index)
     {
         bool find = false;
-        if (tipo == typeof(Int32) || tipo == typeof(float))
+        string filterName = "Filter_" + index;
+        
+        if (_filters.Count != 0)
         {
-            foreach (GameObject check in listOfCheckGroup)
-                check.SetActive(false);
-            
-            if (listOfSliders.Count != 0)
+            foreach (GameObject filter in _filters)
             {
-                foreach (var slider in listOfSliders)
+                filter.SetActive(false);
+            }
+            
+            foreach (GameObject filter in _filters)
+            {
+                if (filter.name != "Filter_" + index)
                 {
-                    if (slider.GetComponent<BasicSliderEffects>().GetId() != index)
-                        slider.SetActive(false);
-                    else
-                    {
-                        slider.SetActive(true);
-                        find = true;
-                    }
+                    filter.SetActive(false);
+                }
+                else
+                {
+                    filter.SetActive(true);
+                    find = true;
                 }
             }
-            if (!find)
-            {
-                GameObject newSlider = InstantiateNewSlider(index, label);
+            if (find) { return; }
+        }
+        
+        GameObject newFilter = InstantiateNewFilter(index); 
+        _filters.Add(newFilter);
+        
+    }
 
-                if (tipo == typeof(int))
-                    newSlider.GetComponentInChildren<MinMaxSlider>().wholeNumbers = true;
-                
-                newSlider.GetComponentInChildren<MinMaxSlider>().UpdateText();
-                listOfSliders.Add(newSlider);
-            }
+    private GameObject InstantiateNewFilter(int index)
+    {
+        GameObject newFilter;
+
+        if (_poiLabelTypes[index] == typeof(string))
+        {
+            List<string> categories = _utils.GetComponent<ProjectUtils>().GetAllCategoriesFromAttribute(index, _poiInfos);
+         
+            newFilter = Instantiate(_checkGroupTemplate, filterMenu.transform);
+            newFilter.GetComponent<RectTransform>().position = _checkGroupTemplate.GetComponent<RectTransform>().position;
+            newFilter.GetComponent<CheckGroupEffects>().UpdateCheckBoxes(categories);
+            newFilter.GetComponent<CheckGroupEffects>().SetId(index);
         }
         else
         {
-            foreach (GameObject slider in listOfSliders)
-                slider.SetActive(false);
-
-            if (listOfCheckGroup.Count != 0)
-            {
-                foreach (var checkGroup in listOfCheckGroup) //verificar se já existe
-                {
-                    checkGroup.SetActive(false);
-                    if (checkGroup.GetComponent<CheckGroupEffects>().GetId() == index) //se ja existe: ativa
-                    {
-                        checkGroup.SetActive(true);
-                        find = true;
-                    }
-                }
-            }
-
-            if (find) return;
-            GameObject newCheckGroup = InstantiateNewCheckGroup(index, label);
-            listOfCheckGroup.Add(newCheckGroup);
-        }
-    }
-
-    private GameObject InstantiateNewCheckGroup(int index, string label)
-    {
-        List<string> categories = _utils.GetComponent<ProjectUtils>().GetAllCategoriesFromAttribute(index, _poiInfos);
-        GameObject checkgroup = Instantiate(_checkGroupTemplate, filterMenu.transform);
+            Vector2 minMax = _utils.GetComponent<ProjectUtils>().GetMinMaxValueFromAttribute(index, _poiInfos);
         
-        checkgroup.GetComponent<RectTransform>().position = _checkGroupTemplate.GetComponent<RectTransform>().position;
-        checkgroup.name = "CheckGroup_" + listOfCheckGroup.Count;
-        checkgroup.GetComponent<CheckGroupEffects>().SetGroupBasics(index, label);
-        checkgroup.GetComponent<CheckGroupEffects>().UpdateCheckBoxes(categories);
-        checkgroup.SetActive(true);
+            newFilter = Instantiate(_minMaxSliderTemplate, filterMenu.transform);
+            newFilter.GetComponent<RectTransform>().localPosition = _minMaxSliderTemplate.GetComponent<RectTransform>().localPosition;
+            newFilter.GetComponentInChildren<MinMaxSlider>().SetValues(minMax.x, minMax.y, minMax.x, minMax.y);
+            newFilter.GetComponentInChildren<MinMaxSlider>().RefreshSliders();
+            newFilter.GetComponent<BasicSliderEffects>().SetId(index);
+        }
 
-        return checkgroup;
+        newFilter.name = "Filter_" + index;
+        newFilter.SetActive(true);
+        
+        return newFilter;
     }
 
-    private GameObject InstantiateNewSlider(int index, string label)
+    public void UpdatePoiDisplayed(string poiName, Transform parent)
     {
-        Vector2 minMax = _utils.GetComponent<ProjectUtils>().GetMinMaxValueFromAttribute(index, _poiInfos);
-        GameObject slider = Instantiate(_minMaxSliderTemplate, filterMenu.transform);
+        _poiInfoDisplay.gameObject.SetActive(true);
+        _poiInfoDisplay.GetComponentInChildren<Text>().text = "";
 
-        slider.GetComponent<RectTransform>().localPosition = _minMaxSliderTemplate.GetComponent<RectTransform>().localPosition;
-        slider.name = "Slider_" + listOfSliders.Count;
-        slider.GetComponent<BasicSliderEffects>().SetSliderBasics(index, label);
-        slider.GetComponentInChildren<MinMaxSlider>().SetLimits(minMax.x, minMax.y);
-        slider.SetActive(true);
-
-        return slider;
-    }
-    
-    public void UpdatePoiDisplayed(string poiName)
-    {
-         _poiInfoDisplay.gameObject.SetActive(true);
-         _poiInfoDisplay.GetComponentInChildren<Text>().text = "";
-
-         List<string> labels = poiManager.GetComponent<DatasetReader>().GetDatabaseLabel();
+        GameObject tempManager = parent.name == "POIManager" ? _poiManager : _heatManager;
          
-         string[] poiInfos = poiManager.GetComponent<DatasetReader>().getPoiInformation(poiName);
-
-         for (int i = 0; i < poiInfos.Length; i++)
-         {
-             _poiInfoDisplay.GetComponentInChildren<Text>().text += labels[i] + ": " + poiInfos[i];
-
-             if (poiInfos.Length - i > 1)
-             {
-                 _poiInfoDisplay.GetComponentInChildren<Text>().text += ",\n";
-             }
-         }
+        List<string> labels = tempManager.GetComponent<DatasetReader>().GetDatabaseLabel();
+        string[] poiInfos = tempManager.GetComponent<DatasetReader>().getPoiInformation(poiName);
+         
+        for (int i = 0; i < poiInfos.Length; i++)
+        {
+            _poiInfoDisplay.GetComponentInChildren<Text>().text += labels[i] + ": " + poiInfos[i];
+            if (poiInfos.Length - i > 1)
+            {
+                _poiInfoDisplay.GetComponentInChildren<Text>().text += ",\n";
+            }
+        } 
     }
 
-    public void HidePOIInfo()
+    public void HidePoiInfo()
     {
         _poiInfoDisplay.gameObject.SetActive(false);
     }
@@ -191,6 +174,5 @@ public class CanvasBehavior : MonoBehaviour
         }
         _canvasHeader.GetComponent<Text>().text = poiName;
     }
-    
 }
 

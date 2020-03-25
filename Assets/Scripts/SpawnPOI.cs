@@ -39,7 +39,6 @@ public class SpawnPOI : MonoBehaviour
             var instance = Instantiate(_PoiPrefab, transform);
             instance.transform.localPosition = _map.GeoToWorldPosition(_locations[_locations.Count-1]);
             instance.name = poi[0];
-            instance.GetComponent<PoiClass>().myPoi.CreatePoi(poi[0], Convert.ToDouble(poi[1]), Convert.ToDouble(poi[2]), poi[3]);
             
             _spawnedObjects.Add(instance);
         }

@@ -25,7 +25,6 @@ public class HeatManagerBehavior : MonoBehaviour
     private void Update()
     {
         _heatList = GameObject.FindGameObjectsWithTag("heatpoint");
-
     }
 
 

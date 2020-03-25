@@ -6,25 +6,34 @@ using Slider = UnityEngine.UI.Slider;
 
 public class CameraLimits : MonoBehaviour
 {
-    public GameObject controladorAltura;
+    // Script que dita o movimento da câmera e os seus limites
+    // Precisa ser acoplado a camera principal da cena.
+    
+    private GameObject controladorAltura;
     public float dragSpeed = 2;
     private Vector3 dragOrigin;
 
+    private void Start()
+    {
+        controladorAltura = GameObject.Find("CameraXController");
+    }
+
     void Update()
     {
+        if (!Input.GetMouseButton(0)) return;
         if (Input.GetMouseButtonDown(0))
         {
             dragOrigin = Input.mousePosition;
             return;
         }
         
-        if (!Input.GetMouseButton(0)) return;
- 
+        Transform t = transform;
         Vector3 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition - dragOrigin);
         Vector3 move = new Vector3(pos.x * dragSpeed, 0, pos.y * dragSpeed);
- 
-        transform.Translate(move, Space.World);
-        var position = transform.position;
+
+        t.Translate(move, Space.World);
+        Vector3 position = t.position;
+        
         position = new Vector3(
             Mathf.Clamp(position.x, -60, 90),
             Mathf.Clamp(position.y, 60, 150),
