@@ -66,4 +66,14 @@ public class HeatManagerBehavior : MonoBehaviour
         }
     }
 
+    public void UpdateVisibility()
+    {
+        for (int i = 0; i < _heatList.Length; i++)
+        {
+            bool heatvisibility = _heatList[i].GetComponent<Renderer>().enabled;
+            _heatList[i].GetComponent<Renderer>().enabled = !heatvisibility;
+        }
+
+    }
+
 }
