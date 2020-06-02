@@ -7,6 +7,8 @@ TagManager:
   - poi
   - checkgroup
   - sliderpoint
+  - heatpoint
+  - browser
   layers:
   - Default
   - TransparentFX

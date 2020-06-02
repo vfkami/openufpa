@@ -89,16 +89,10 @@ namespace GracesGames.SimpleFileBrowser.Scripts {
 
 		// Loads a file using a path
 		private void LoadFileUsingPath(string path) {
-			if (path.Length != 0) {
-				BinaryFormatter bFormatter = new BinaryFormatter();
-				// Open the file using the path
-				FileStream file = File.OpenRead(path);
-				// Convert the file from a byte array into a string
-				string fileData = bFormatter.Deserialize(file) as string;
-				// We're done working with the file so we can close it
-				file.Close();
-				// Set the LoadedText with the value of the file
-				_loadedText.GetComponent<Text>().text = "Loaded data: \n" + fileData;
+			if (path.Length != 0)
+			{
+				GameObject pathExplorer = GameObject.FindGameObjectWithTag("browser");
+				pathExplorer.GetComponent<InputField>().text = path;
 			} else {
 				Debug.Log("Invalid path given");
 			}

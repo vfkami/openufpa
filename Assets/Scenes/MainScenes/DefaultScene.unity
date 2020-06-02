@@ -3809,7 +3809,6 @@ GameObject:
   - component: {fileID: 752389528}
   - component: {fileID: 752389530}
   - component: {fileID: 752389529}
-  - component: {fileID: 752389531}
   m_Layer: 5
   m_Name: FilterMenu
   m_TagString: Untagged
@@ -3855,7 +3854,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3876,18 +3875,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 752389527}
   m_CullTransparentMesh: 0
---- !u!114 &752389531
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 752389527}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fed0208a21615bf4f8a0ccfd83945005, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &799070925
 GameObject:
   m_ObjectHideFlags: 0
@@ -5676,7 +5663,6 @@ GameObject:
   - component: {fileID: 1255671772}
   - component: {fileID: 1255671774}
   - component: {fileID: 1255671773}
-  - component: {fileID: 1255671775}
   m_Layer: 5
   m_Name: HeatmapMenu
   m_TagString: Untagged
@@ -5720,7 +5706,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -5741,18 +5727,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1255671771}
   m_CullTransparentMesh: 0
---- !u!114 &1255671775
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1255671771}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fed0208a21615bf4f8a0ccfd83945005, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1312110673
 GameObject:
   m_ObjectHideFlags: 0
@@ -6712,7 +6686,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4187505068457818, guid: 5bb46bae81bf04608ac699be504c5e66, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4187505068457818, guid: 5bb46bae81bf04608ac699be504c5e66, type: 3}
       propertyPath: m_LocalPosition.z
@@ -7674,7 +7648,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 116, y: -36}
+  m_AnchoredPosition: {x: 105.5, y: -36}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1579365559

@@ -97,9 +97,12 @@ namespace GracesGames.SimpleFileBrowser.Scripts {
 			if (uiCanvas != null) {
 				GameObject userIterfacePrefab =
 					ViewMode == ViewMode.Portrait ? FileBrowserPortraitUiPrefab : FileBrowserLandscapeUiPrefab;
+				
 				GameObject fileBrowserUi = Instantiate(userIterfacePrefab, uiCanvas.transform, false);
 				_uiScript = fileBrowserUi.GetComponent<UserInterface>();
 				_uiScript.Setup(this);
+				fileBrowserUi.GetComponent<RectTransform>().localScale = new Vector3(.5F, .5F, .5F);
+
 			} else {
 				Debug.LogError("Make sure there is a canvas GameObject present in the Hierarcy (Create UI/Canvas)");
 			}
