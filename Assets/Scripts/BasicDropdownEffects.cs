@@ -28,6 +28,11 @@ public class BasicDropdownEffects : MonoBehaviour
         _mainCanvas = GameObject.Find("Canvas");
         _goManager = GameObject.Find(parent);
         
+        if (_goManager.name == "HeatManager" && GameObject.Find("CustomSceneConfig"))
+        {
+            return;
+        }
+        
         _utils.GetComponent<ProjectUtils>().DropdownOptions(GetComponent<Dropdown>(), _goManager, false);
     }
     
@@ -37,7 +42,11 @@ public class BasicDropdownEffects : MonoBehaviour
         int index = GetComponent<Dropdown>().value + 3;
         if (index != 0) { _mainCanvas.GetComponent<CanvasBehavior>().ShowNewFilter(index); }
     }
-    
+
+    public void LoadOptions()
+    {
+        _utils.GetComponent<ProjectUtils>().DropdownOptions(GetComponent<Dropdown>(), _goManager, true);
+    }
     
     public void ColorChanger()
     {

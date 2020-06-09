@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,11 @@ public class HeightDropdownBehavior : MonoBehaviour
     {
         _utils = GameObject.Find("Utils");
         _goManager = GameObject.Find(parent);
+
+        if (_goManager.name == "HeatManager" && GameObject.Find("CustomSceneConfig"))
+        {
+            return;
+        }
         
         _utils.GetComponent<ProjectUtils>().DropdownOptions(GetComponent<Dropdown>(), _goManager, true);
     }
@@ -43,6 +49,12 @@ public class HeightDropdownBehavior : MonoBehaviour
             _goManager.GetComponent<HeatManagerBehavior>().UpdateWeight(index, label);
 
     }
+    
+    public void LoadOptions()
+    {
+        _utils.GetComponent<ProjectUtils>().DropdownOptions(GetComponent<Dropdown>(), _goManager, true);
+    }
+    
     
     // void PopulateDropdown()
     // {

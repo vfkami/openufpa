@@ -12,8 +12,8 @@ public class DatasetReader : MonoBehaviour
      - A Id deve conter até 10 digitos e é a maneira pela qual o poi será referenciado 
      - A descrição será a maneira pela qual o poi será apresentado ao usuário
     */
-    
-    [SerializeField] private string datasetPath;
+    private string datasetPath;
+
 
     private List<string[]> _poiDataset = new List<string[]>();
     private List<string> _datasetLabel = new List<string>();
@@ -21,11 +21,39 @@ public class DatasetReader : MonoBehaviour
 
     List<string> _tempLine = new List<string>();
     
-    // Start is called before the first frame update
     void Awake()
     {
+        if (GameObject.Find("CustomSceneConfig"))
+        {
+            GameObject mapSettings = GameObject.Find("CustomSceneConfig");
+            datasetPath = mapSettings.GetComponent<CustomMapInfo>().GetDatabasePath();
+
+            if (gameObject.name == "HeatManager")
+            {
+                datasetPath = null;
+                return;
+            }
+        }
+        else
+        {
+            if (gameObject.name == "HeatManager")
+            {
+                datasetPath = "C:/ufpa_heattest.csv";
+            }
+            if (gameObject.name == "POIManager")
+            {
+                datasetPath = "C:/ufpapredios_fake.csv";
+            }
+        }
+        
         ReadTextFile(datasetPath);
     }
+
+    public void PassNewPath(string newPath)
+    {
+        ReadTextFile(newPath);
+    }
+    
     private void ReadTextFile(string path) // atributos separados por ','
     {
         StreamReader file = new StreamReader(path);
@@ -99,7 +127,7 @@ public class DatasetReader : MonoBehaviour
     }
 
 
-    public string[] getPoiInformation(string poiName)
+    public string[] GetPoiInformation(string poiName)
     {
         foreach (string[] line in _poiDataset)
         {
@@ -107,6 +135,16 @@ public class DatasetReader : MonoBehaviour
                 return line;
         }
         return new string[] {};
+    }
+
+    public void SetDatabasePath(string path)
+    {
+        datasetPath = path;
+    }
+    
+    public void GetDatabasePath()
+    {
+        print(datasetPath);
     }
 
 }

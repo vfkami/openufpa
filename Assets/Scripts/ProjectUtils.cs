@@ -23,9 +23,10 @@ public class ProjectUtils : MonoBehaviour
         List<float> normalizedValues = new List<float>();
         foreach (var value in tList)
         {
-            float tempValue = (value - minValue)/(maxValue - minValue);
+            float tempValue = (value - minValue) / (maxValue - minValue);
             normalizedValues.Add(tempValue);
         }
+
         return normalizedValues;
     }
     
@@ -51,10 +52,10 @@ public class ProjectUtils : MonoBehaviour
         return minMaxValue;
     }
     
-    public List<string> GetAllCategoriesFromAttribute(int index, List<string[]> Infos)
+    public List<string> GetAllCategoriesFromAttribute(int index, List<string[]> infos)
     {
         List<string> categories = new List<string>();
-        foreach (string[] line in Infos)
+        foreach (string[] line in infos)
         {
             string tempCategory = line[index];
             if (!categories.Contains(tempCategory))
@@ -67,7 +68,6 @@ public class ProjectUtils : MonoBehaviour
 
     public void DropdownOptions (Dropdown reference, GameObject goManager, bool isHeightDropdown)
     {
-        print("calls");
         List<string> options = new List<string>(goManager.GetComponent<DatasetReader>().GetDatabaseLabel());
         List<Type> types = new List<Type>(goManager.GetComponent<DatasetReader>().GetLabelTypes());
         
@@ -95,5 +95,14 @@ public class ProjectUtils : MonoBehaviour
         // Finalize
         reference.GetComponent<Dropdown>().ClearOptions();
         reference.GetComponent<Dropdown>().AddOptions(tempOptions);
+    }
+
+    private void Start()
+    {
+        if (GameObject.Find("CustomSceneConfig"))
+        {
+            GameObject CustomMapInfo = GameObject.Find("CustomSceneConfig");
+            CustomMapInfo.AddComponent<sewMapBehavior>();
+        }
     }
 }

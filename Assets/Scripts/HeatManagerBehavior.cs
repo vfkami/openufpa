@@ -31,7 +31,6 @@ public class HeatManagerBehavior : MonoBehaviour
     // Start is called before the first frame update
     public void UpdateWeight(int index, string label)
     {
-        
         print("Modificando altura de acordo com atributo " + label);
         int multiplier = 10;
 
@@ -68,12 +67,14 @@ public class HeatManagerBehavior : MonoBehaviour
 
     public void UpdateVisibility()
     {
+        bool visibility = true;
         for (int i = 0; i < _heatList.Length; i++)
         {
-            bool heatvisibility = _heatList[i].GetComponent<Renderer>().enabled;
-            _heatList[i].GetComponent<Renderer>().enabled = !heatvisibility;
+            visibility = _heatList[i].GetComponent<Renderer>().enabled;
+            _heatList[i].GetComponent<Renderer>().enabled = !visibility;
         }
-
     }
+
+
 
 }

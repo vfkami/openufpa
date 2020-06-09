@@ -1074,7 +1074,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12931f2acfdd81f4ba8d051b55c9bebe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  datasetPath: Assets/Scripts/ufpapredios_fake.csv
 --- !u!114 &145684335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2508,10 +2507,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc5b8e6f8a195a740a85cfe2dd25d99d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  checkGroupTemplate: {fileID: 892296309}
+  minMaxSliderTemplate: {fileID: 1401190905}
   filterMenu: {fileID: 752389527}
   heatMenu: {fileID: 1255671771}
-  poi_dpdAltura: {fileID: 712421947}
-  ht_dpdAltura: {fileID: 923652251}
 --- !u!1 &497581490
 GameObject:
   m_ObjectHideFlags: 0
@@ -4567,6 +4566,12 @@ RectTransform:
   m_AnchoredPosition: {x: 5, y: -0.5}
   m_SizeDelta: {x: -30, y: -3}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &892296309 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 38668481507331717, guid: 5541a14242622d14b96e289337670903,
+    type: 3}
+  m_PrefabInstance: {fileID: 38668480981958808}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &914597457
 GameObject:
   m_ObjectHideFlags: 0
@@ -5960,7 +5965,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 391086489236060716}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1401190905}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6392e944c22b7b04dacec32eb3a0c404, type: 3}
@@ -6074,6 +6079,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1389122760}
   m_CullTransparentMesh: 0
+--- !u!1 &1401190905 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3080525146572182585, guid: ea306433a999e6e43a6cde6cf301304f,
+    type: 3}
+  m_PrefabInstance: {fileID: 391086489236060716}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1457825048
 GameObject:
   m_ObjectHideFlags: 0
@@ -6233,9 +6244,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1468313944}
-  - component: {fileID: 1468313943}
-  - component: {fileID: 1468313946}
   - component: {fileID: 1468313945}
+  - component: {fileID: 1468313946}
+  - component: {fileID: 1468313943}
   m_Layer: 0
   m_Name: HeatManager
   m_TagString: Untagged
@@ -6296,7 +6307,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12931f2acfdd81f4ba8d051b55c9bebe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  datasetPath: Assets/Scripts/ufpa_heattest.csv
 --- !u!1 &1471045197
 GameObject:
   m_ObjectHideFlags: 0
@@ -9699,7 +9709,7 @@ PrefabInstance:
     - target: {fileID: 38668481507331717, guid: 5541a14242622d14b96e289337670903,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 38668481507331718, guid: 5541a14242622d14b96e289337670903,
         type: 3}
@@ -9904,7 +9914,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 38668480981958808}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 892296309}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a29a611c4599e4642895152abfb856cd, type: 3}
@@ -10016,6 +10026,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Template_MinMaxSlider
+      objectReference: {fileID: 0}
+    - target: {fileID: 3080525146572182585, guid: ea306433a999e6e43a6cde6cf301304f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4547914359553814982, guid: ea306433a999e6e43a6cde6cf301304f,
         type: 3}

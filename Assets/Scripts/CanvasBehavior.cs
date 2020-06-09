@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 /*
@@ -14,8 +15,8 @@ public class CanvasBehavior : MonoBehaviour
     private GameObject _heatManager;
 
     //Prefabs
-    private GameObject _checkGroupTemplate;
-    private GameObject _minMaxSliderTemplate;
+    public GameObject checkGroupTemplate;
+    public GameObject minMaxSliderTemplate;
     
     //Canvas GOs
     public GameObject filterMenu;
@@ -23,9 +24,7 @@ public class CanvasBehavior : MonoBehaviour
 
 
     private List<GameObject> _filters = new List<GameObject>();
-
-    public GameObject poi_dpdAltura;
-    public GameObject ht_dpdAltura;
+    
     private GameObject _poiInfoDisplay;
     private GameObject _canvasHeader;
 
@@ -43,13 +42,9 @@ public class CanvasBehavior : MonoBehaviour
     private void Awake()
     {
         _poiInfoDisplay = GameObject.Find("POInfo");
-        _checkGroupTemplate = GameObject.Find("Template_CheckboxGroup");
-        _minMaxSliderTemplate = GameObject.Find("Template_MinMaxSlider");
         _canvasHeader = GameObject.Find("CanvasHeader");
         _utils = GameObject.Find("Utils");
         
-        _minMaxSliderTemplate.SetActive(false);
-        _checkGroupTemplate.SetActive(false);
         filterMenu.SetActive(false);
         heatMenu.SetActive(false);
         _poiInfoDisplay.SetActive(false);
@@ -115,8 +110,8 @@ public class CanvasBehavior : MonoBehaviour
         {
             List<string> categories = _utils.GetComponent<ProjectUtils>().GetAllCategoriesFromAttribute(index, _poiInfos);
          
-            newFilter = Instantiate(_checkGroupTemplate, filterMenu.transform);
-            newFilter.GetComponent<RectTransform>().position = _checkGroupTemplate.GetComponent<RectTransform>().position;
+            newFilter = Instantiate(checkGroupTemplate, filterMenu.transform);
+            newFilter.GetComponent<RectTransform>().position = checkGroupTemplate.GetComponent<RectTransform>().position;
             newFilter.GetComponent<CheckGroupEffects>().UpdateCheckBoxes(categories);
             newFilter.GetComponent<CheckGroupEffects>().SetId(index);
         }
@@ -124,8 +119,8 @@ public class CanvasBehavior : MonoBehaviour
         {
             Vector2 minMax = _utils.GetComponent<ProjectUtils>().GetMinMaxValueFromAttribute(index, _poiInfos);
         
-            newFilter = Instantiate(_minMaxSliderTemplate, filterMenu.transform);
-            newFilter.GetComponent<RectTransform>().localPosition = _minMaxSliderTemplate.GetComponent<RectTransform>().localPosition;
+            newFilter = Instantiate(minMaxSliderTemplate, filterMenu.transform);
+            newFilter.GetComponent<RectTransform>().localPosition = minMaxSliderTemplate.GetComponent<RectTransform>().localPosition;
             newFilter.GetComponentInChildren<MinMaxSlider>().SetValues(minMax.x, minMax.y, minMax.x, minMax.y);
             newFilter.GetComponentInChildren<MinMaxSlider>().RefreshSliders();
             newFilter.GetComponent<BasicSliderEffects>().SetId(index);
@@ -145,7 +140,7 @@ public class CanvasBehavior : MonoBehaviour
         GameObject tempManager = parent.name == "POIManager" ? _poiManager : _heatManager;
          
         List<string> labels = tempManager.GetComponent<DatasetReader>().GetDatabaseLabel();
-        string[] poiInfos = tempManager.GetComponent<DatasetReader>().getPoiInformation(poiName);
+        string[] poiInfos = tempManager.GetComponent<DatasetReader>().GetPoiInformation(poiName);
          
         for (int i = 0; i < poiInfos.Length; i++)
         {

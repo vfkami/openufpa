@@ -17,19 +17,27 @@ public class SpawnPOI : MonoBehaviour
     [SerializeField]
     GameObject _PoiPrefab;
 
-    List<GameObject> _spawnedObjects;
+    List<GameObject> _spawnedObjects = new List<GameObject>();
     
     void Start()
     {
-        InstantiatePOIs();
+        if (!GameObject.Find("CustomSceneConfig"))
+        {
+            InstantiatePois();
+        }
     }
 
-    private void InstantiatePOIs()
+    public void InstatiatePoisInCustomMap()
+    {
+        print("entrou");
+        InstantiatePois();
+    }
+
+    private void InstantiatePois()
     {
         List<string[]> Dataset = GetComponent<DatasetReader>().GetPoiList();
-        
         //_locations = new Vector2d[Dataset.Count];
-        _spawnedObjects = new List<GameObject>();
+        
         foreach (var poi in Dataset)
         {
             // poi[0] = id | poi[1] = lat | poi[2] = long | poi[3] = descrição | poi[4] em diante = dados opcionais
@@ -46,12 +54,16 @@ public class SpawnPOI : MonoBehaviour
     
     private void Update()
     {
-        int count = _spawnedObjects.Count;
-        for (int i = 0; i < count; i++)
+        if (_spawnedObjects.Count > 0)
         {
-            var spawnedObject = _spawnedObjects[i];
-            var location = _locations[i];
-            spawnedObject.transform.localPosition = _map.GeoToWorldPosition(location, true);
+            int count = _spawnedObjects.Count;
+        
+            for (int i = 0; i < count; i++)
+            {
+                var spawnedObject = _spawnedObjects[i];
+                var location = _locations[i];
+                spawnedObject.transform.localPosition = _map.GeoToWorldPosition(location, true);
+            }
         }
     }
 }

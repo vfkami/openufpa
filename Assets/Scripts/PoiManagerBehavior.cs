@@ -162,9 +162,11 @@ public class PoiManagerBehavior : MonoBehaviour
 
             return;
         }
+
         if (_attributeTypes[attIndex] == typeof(string)) // se for categorico
         {
-            List<string> categories = new List<string>(_utils.GetComponent<ProjectUtils>().GetAllCategoriesFromAttribute(attIndex, _poiInfos));
+            List<string> categories = new List<string>(_utils.GetComponent<ProjectUtils>()
+                .GetAllCategoriesFromAttribute(attIndex, _poiInfos));
 
             foreach (var poi in _poiList)
             {
@@ -180,11 +182,13 @@ public class PoiManagerBehavior : MonoBehaviour
                     }
                 }
             }
+
             return;
         }
         // se for contínuo
-        
+
         List<float> normalizedList = _utils.GetComponent<ProjectUtils>().NormalizeValues(attIndex, _poiInfos);
+        print(_poiList.Length);
         for (int i = 0; i < _poiList.Length; i++)
         {
             Color newColor = Color.HSVToRGB(1, normalizedList[i] + 0.1F, 1);
